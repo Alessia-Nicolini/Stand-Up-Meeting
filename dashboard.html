@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>   
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="container">
+        <h3>Accesso riuscito con successo!</h3>
+        <button id="inizia-meeting" value="Visualizza tabella" onclick="mostraTabella()">Inizia stand up meeting</button>
+    </div>
+    
+
+    <div id="contenuto"> 
+        <div id="dataTimer"> 
+
+        </div>
+        <table id="example">
+            <thead>
+                <tr>
+                    <th style="display: none;">Id</th>
+                    <th>Sviluppatore</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+            </tbody>
+        </table>
+        <button id="termina" onclick="salvaNota()">Termina stand up</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
