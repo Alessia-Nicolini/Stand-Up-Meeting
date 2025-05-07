@@ -71,7 +71,7 @@ async function mostraTabella() {
             <td style="display: none;">${element.id}</td>
                 <td>${element.name}</td>
                 <td>
-                    <button class="play" data-name="${element.name}" onclick="toggleTimer(this, '${element.name}')">Play</button>
+                    <button class="play" id="play" data-name="${element.name}" onclick="toggleTimer(this, '${element.name}')">Play</button>
                     <span class="timer" id="timer">${formatTime(timers[element.name])}</span>
                 </td>
                 <td><textarea placeholder="Scrivi le tue note"></textarea></td>
@@ -176,12 +176,70 @@ async function terminate(){
     const today = new Date();
 }
 
+function salvaNota() {
+    terminaMeeting()
+    const rows = document.querySelectorAll("#example tbody tr");
+    const data = new Date().toLocaleString();
+    if (rows.length === 0) {
+        alert("Nessun dato da salvare!");
+        return;
+    }
 
-function salvaNota(){
-    let sviluppatore 
+    rows.forEach(row => {
+        const sviluppatore = row.cells[1]?.textContent || "Sconosciuto";
+        const notaCell = row.cells[3];
+        let nota = notaCell?.textContent || "Nessuna nota";
+        
+        if (notaCell?.querySelector("input, textarea")) {
+            nota = notaCell.querySelector("input, textarea").value;
+        }
+        if (sviluppatore && nota) {
+            let note = JSON.parse(localStorage.getItem("storico_note")) || [];
+            note.push({ data: String(data), sviluppatore, nota });
+            localStorage.setItem("storico_note", JSON.stringify(note));
+        }
+    });
+
+    alert("Note salvate con successo!");
 }
 
-function mostraStorico(utente, nota){
+function caricaStoricoNote() {
+    const storicoBody = document.getElementById("storicoBody");
+    if (!storicoBody) {
+        console.error("Elemento storicoBody non trovato.");
+        return;
+    }
+    storicoBody.innerHTML = "";
+    const note = JSON.parse(localStorage.getItem("storico_note")) || [];
 
-    
+    note.forEach(item => {
+        const row = `<tr><td>${item.data}</td><td>${item.sviluppatore}</td><td>${item.nota}</td></tr>`;
+        storicoBody.innerHTML += row;
+    });
+}
+
+function visualizzaStorico() {
+    window.location.href = 'storico.html';
+}
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", caricaStoricoNote);
+} else {
+    caricaStoricoNote();
+}
+
+function terminaMeeting() {
+    Object.keys(timerIntervals).forEach(name => {
+        if (timerIntervals[name].active) {
+            clearInterval(timerIntervals[name].interval);
+            timerIntervals[name].active = false;
+            const button = document.querySelector(`[data-name="${name}"]`);
+            if (button) button.textContent = "Play";
+        }
+    });
+
+    if (globalTimerInterval) {
+        clearInterval(globalTimerInterval);
+        globalTimerInterval = null;
+    }
+
 }
