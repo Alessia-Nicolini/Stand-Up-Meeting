@@ -47,7 +47,7 @@ async function mostraTabella() {
  
         const json = await response.json();
         console.log(json);
- 
+        json.sort((a, b) => a.name.localeCompare(b.name));
         const today = new Date();
         const dataString = today.toLocaleDateString("it-IT", {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -60,12 +60,11 @@ async function mostraTabella() {
  
         const tbody = table.querySelector("tbody");
         tbody.innerHTML = "";
- 
         json.forEach(element => {
             if (!timers[element.name]) {
                 timers[element.name] = 0;
             }
- 
+           
             const tr = document.createElement("tr");
             tr.innerHTML = `
             <td style="display: none;">${element.id}</td>
